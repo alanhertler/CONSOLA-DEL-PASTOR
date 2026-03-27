@@ -1,13 +1,11 @@
 import streamlit as st
 
-# Configuración de la página
 st.set_page_config(
     page_title="Consola del Pastor",
     page_icon="✝️",
     layout="wide"
 )
 
-# CSS mejorado con letras más elegantes
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Merriweather:wght@300;400&display=swap');
@@ -73,20 +71,43 @@ st.markdown("""
         padding: 12px 24px !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     }
-    
-    .stSuccess, .stWarning, .stInfo {
-        font-family: 'Montserrat', sans-serif !important;
-        border-radius: 10px !important;
-    }
     </style>
     """, unsafe_allow_html=True)
 
-# Inicializar estado
 if 'texto_actual' not in st.session_state:
     st.session_state.texto_actual = "Esperando al pastor..."
 
-# Layout en columnas
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.markdown("### 📝 Panel d
+    st.markdown("### 📝 Panel de Control")
+    st.markdown('<p class="status">✅ Conectado</p>', unsafe_allow_html=True)
+    
+    st.write("")
+    
+    nuevo_texto = st.text_area(
+        "Mensaje para la congregación:",
+        height=280,
+        placeholder="Escribe aquí el mensaje que verá la congregación..."
+    )
+    
+    st.write("")
+    
+    col_btn1, col_btn2 = st.columns(2)
+    
+    with col_btn1:
+        if st.button("📢 Actualizar", type="primary", use_container_width=True):
+            if nuevo_texto.strip():
+                st.session_state.texto_actual = nuevo_texto
+                st.success("✅ Mensaje actualizado")
+            else:
+                st.warning("⚠️ Escribe un mensaje primero")
+    
+    with col_btn2:
+        if st.button("🗑️ Limpiar", use_container_width=True):
+            st.session_state.texto_actual = "Esperando al pastor..."
+            st.info("🧹 Pantalla limpiada")
+
+with col2:
+    st.markdown("### 📺 Pantalla de Proyección")
+    st.markdown(f'<div class="big-text">{st.session_state.texto_actual}</div>', unsafe_allow_html=True)
