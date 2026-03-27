@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culto Digital</title>
+    <style>
+        body {
+            background: #1a1a2e;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #texto {
+            font-size: 28px;
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+        }
+        #estado {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div id="estado">Conectando...</div>
+    <div id="texto">Esperando al pastor...</div>
+
+    <script>
+        const ws = new WebSocket("ws://localhost:8765");
+
+        ws.onopen = () => {
+            document.getElementById("estado").textContent = "✅ Conectado";
+        };
+
+        ws.onmessage = (event) => {
+            const datos = JSON.parse(event.data);
+            document.getElementById("texto").textContent = datos.texto;
+        };
+
+        ws.onclose = () => {
+            document.getElementById("estado").textContent = "❌ Desconectado";
+        };
+    </script>
+</body>
+</html>

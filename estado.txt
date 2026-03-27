@@ -1,0 +1,30 @@
+PROYECTO: CULTO DIGITAL SINCRONIZADO
+FECHA: 26/03/2026
+=====================================
+
+ARCHIVOS CREADOS:
+- app.py → servidor WebSocket (funciona ✅)
+- fiel.html → pantalla del fiel (funciona ✅)
+- pastor_test.py → prueba de envío (funciona ✅)
+
+LO QUE FUNCIONA:
+- Servidor corre con: python app.py
+- Fiel se conecta abriendo fiel.html en el navegador
+- Pastor envía texto con: python pastor_test.py
+- El texto aparece en tiempo real en el navegador
+
+TECNOLOGÍA:
+- Python 3.14
+- WebSockets
+- HTML simple
+
+PRÓXIMO PASO:
+- Crear panel del pastor con 7 botones
+- Cada botón envía un versículo diferente
+- Sin necesidad de CMD, todo visual
+
+PARA ARRANCAR LA PRÓXIMA VEZ:
+1. Abrir CMD
+2. cd culto_digital
+3. python app.py
+4. Abrir fiel.html en el navegador
