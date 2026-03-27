@@ -1,5 +1,4 @@
 import streamlit as st
-import time
 
 # Configuración de la página
 st.set_page_config(
@@ -8,7 +7,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# CSS personalizado para el estilo oscuro
+# CSS personalizado
 st.markdown("""
     <style>
     .stApp {
@@ -19,19 +18,17 @@ st.markdown("""
         text-align: center;
         padding: 50px;
         color: white;
-        background-color: #1a1a2e;
+        background-color: #16213e;
         border-radius: 10px;
-        min-height: 300px;
+        min-height: 400px;
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: 20px;
     }
     .status {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        font-size: 14px;
         color: #4CAF50;
+        font-size: 16px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -40,43 +37,39 @@ st.markdown("""
 if 'texto_actual' not in st.session_state:
     st.session_state.texto_actual = "Esperando al pastor..."
 
-# Crear dos columnas: una para controles y otra para visualización
+# Layout en columnas
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.header("📝 Panel de Control")
+    st.markdown("### 📝 Panel de Control")
+    st.markdown('<p class="status">✅ Conectado</p>', unsafe_allow_html=True)
     
-    # Campo de texto para el pastor
+    # Campo de texto
     nuevo_texto = st.text_area(
-        "Escribe el mensaje:",
-        height=200,
-        placeholder="Escribe aquí el mensaje para mostrar..."
+        "Mensaje para la congregación:",
+        height=250,
+        placeholder="Escribe aquí el mensaje..."
     )
     
-    # Botón para actualizar
-    if st.button("📢 Actualizar Pantalla", type="primary"):
-        if nuevo_texto:
-            st.session_state.texto_actual = nuevo_texto
-            st.success("✅ Mensaje actualizado")
-        else:
-            st.warning("⚠️ Escribe algo primero")
+    # Botones
+    col_btn1, col_btn2 = st.columns(2)
     
-    # Botón para limpiar
-    if st.button("🗑️ Limpiar Pantalla"):
-        st.session_state.texto_actual = "Esperando al pastor..."
-        st.info("Pantalla limpiada")
+    with col_btn1:
+        if st.button("📢 Actualizar", type="primary", use_container_width=True):
+            if nuevo_texto.strip():
+                st.session_state.texto_actual = nuevo_texto
+                st.success("✅ Actualizado")
+            else:
+                st.warning("⚠️ Escribe algo")
+    
+    with col_btn2:
+        if st.button("🗑️ Limpiar", use_container_width=True):
+            st.session_state.texto_actual = "Esperando al pastor..."
+            st.info("Limpiado")
 
 with col2:
-    st.header("📺 Pantalla Principal")
+    st.markdown("### 📺 Pantalla de Proyección")
     
-    # Mostrar el texto grande
-    st.markdown(f"""
-        <div class="status">✅ Conectado</div>
-        <div class="big-text">
-            {st.session_state.texto_actual}
-        </div>
-        """, unsafe_allow_html=True)
-
-# Auto-refresh cada 2 segundos
-time.sleep(0.1)
-st.rerun()
+    # Mostrar texto grande
+    st.markdown(f'<div class="big-text">{st.session_state.texto_actual}</div>', 
+                unsafe_allow_html=True)
