@@ -1,54 +1,82 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Culto Digital</title>
+import streamlit as st
+import time
+
+# Configuración de la página
+st.set_page_config(
+    page_title="Consola del Pastor",
+    page_icon="✝️",
+    layout="wide"
+)
+
+# CSS personalizado para el estilo oscuro
+st.markdown("""
     <style>
-        body {
-            background: #1a1a2e;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        #texto {
-            font-size: 28px;
-            text-align: center;
-            padding: 20px;
-            max-width: 600px;
-        }
-        #estado {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            font-size: 14px;
-            color: #888;
-        }
+    .stApp {
+        background-color: #1a1a2e;
+    }
+    .big-text {
+        font-size: 48px;
+        text-align: center;
+        padding: 50px;
+        color: white;
+        background-color: #1a1a2e;
+        border-radius: 10px;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .status {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        font-size: 14px;
+        color: #4CAF50;
+    }
     </style>
-</head>
-<body>
-    <div id="estado">Conectando...</div>
-    <div id="texto">Esperando al pastor...</div>
+    """, unsafe_allow_html=True)
 
-    <script>
-        const ws = new WebSocket("ws://localhost:8765");
+# Inicializar estado
+if 'texto_actual' not in st.session_state:
+    st.session_state.texto_actual = "Esperando al pastor..."
 
-        ws.onopen = () => {
-            document.getElementById("estado").textContent = "✅ Conectado";
-        };
+# Crear dos columnas: una para controles y otra para visualización
+col1, col2 = st.columns([1, 2])
 
-        ws.onmessage = (event) => {
-            const datos = JSON.parse(event.data);
-            document.getElementById("texto").textContent = datos.texto;
-        };
+with col1:
+    st.header("📝 Panel de Control")
+    
+    # Campo de texto para el pastor
+    nuevo_texto = st.text_area(
+        "Escribe el mensaje:",
+        height=200,
+        placeholder="Escribe aquí el mensaje para mostrar..."
+    )
+    
+    # Botón para actualizar
+    if st.button("📢 Actualizar Pantalla", type="primary"):
+        if nuevo_texto:
+            st.session_state.texto_actual = nuevo_texto
+            st.success("✅ Mensaje actualizado")
+        else:
+            st.warning("⚠️ Escribe algo primero")
+    
+    # Botón para limpiar
+    if st.button("🗑️ Limpiar Pantalla"):
+        st.session_state.texto_actual = "Esperando al pastor..."
+        st.info("Pantalla limpiada")
 
-        ws.onclose = () => {
-            document.getElementById("estado").textContent = "❌ Desconectado";
-        };
-    </script>
-</body>
-</html>
+with col2:
+    st.header("📺 Pantalla Principal")
+    
+    # Mostrar el texto grande
+    st.markdown(f"""
+        <div class="status">✅ Conectado</div>
+        <div class="big-text">
+            {st.session_state.texto_actual}
+        </div>
+        """, unsafe_allow_html=True)
+
+# Auto-refresh cada 2 segundos
+time.sleep(0.1)
+st.rerun()
