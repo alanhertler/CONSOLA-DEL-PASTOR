@@ -18,9 +18,12 @@ async def manejar_conexion(websocket):
         clientes.remove(websocket)
         print(f"Fiel desconectado. Total: {len(clientes)}")
 
-async def main():
-    print("Servidor iniciado en puerto 8765")
-    async with websockets.serve(manejar_conexion, "0.0.0.0", 8765):
-        await asyncio.Future()
+import streamlit as st
+
+st.set_page_config(page_title="CONSOLA DEL PASTOR")
+
+st.title("CONSOLA DEL PASTOR")
+st.warning("La versión con WebSocket no funciona en Streamlit Cloud.")
+st.info("Hay que convertir esta consola a lógica interna de Streamlit.")
 
 asyncio.run(main())
